@@ -1,0 +1,71 @@
+
+-- Mini-Projeto - Importando dados do BD Oracle para o HDFS:
+
+
+	1 - Execução do Mini-Projeto - Inicializando HDFS e YARN
+
+		Como usuario hadoop, inicializar HDFS e Yarn
+		start-dfs.sh
+		start-yarn.sh
+
+
+	2 - Execução do Mini-Projeto - Configurando Driver JDBC
+
+		Conectar no SO como usuário oracle e Baixar o driver JDBC da Oracle para o Sqoop
+		https://www.oracle.com/database/technologies/jdbc-ucp-122-downloads.html
+
+		Descompactar o arquivo
+		tar -xvf ojdbc8-full.tar.gz
+
+		Como usuario root Copiar o arquivo para o diretorio do sqoop
+		cd ojdbc8-full/
+		cp ojdbc8.jar /opt/sqoop/lib
+		chown hadoop:hadoop ojdbc8.jar
+
+
+	3 - Execução do Mini-Projeto - Ajustando os Privilégios de Acesso
+
+		No usuario oracle, configurar as variáveis de ambiente para o Hadoop e Sqoop no arquivo ˜/.bashrc
+		obs: para o usuario oracle enxergar o HDFS
+		# Java JDK
+		export JAVA_HOME=/opt/jdk
+		export PATH=$PATH:$JAVA_HOME/bin
+
+		# Hadoop
+		export HADOOP_HOME=/opt/hadoop
+		export HADOOP_INSTALL=$HADOOP_HOME
+		export HADOOP_COMMON_HOME=$HADOOP_HOME
+		export HADOOP_MAPRED_HOME=$HADOOP_HOME
+		export HADOOP_HDFS_HOME=$HADOOP_HOME
+		export YARN_HOME=$HADOOP_HOME
+		export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+		# Sqoop
+		export SQOOP_HOME=/opt/sqoop
+		export PATH=$PATH:$SQOOP_HOME/bin
+		export HCAT_HOME=/opt/sqoop/hcatalog
+		export ACCUMULO_HOME=/opt/sqoop/accumulo
+
+		source .bashrc
+
+		Como usuário hadoop, definir os privilégios com os comandos abaixo:
+		hdfs dfs -chmod -R 777 /
+		chmod -R 777 /opt/hadoop/logs
+
+		Como root:
+		groups oracle
+		usermod -a -G hadoop oracle
+
+
+	3 - Execução do Mini-Projeto - Transferir Dados do Oracle para o HDFS
+
+		Com usuário Oracle Importação de Dados do Oracle para o HDFS.
+		no diretorio etl:
+		sqoop import --connect jdbc:oracle:thin:aluno/dsahadoop@dataserver.localdomain:1539/orcl --username aluno -password dsahadoop --query "select user_id, movie_id from cinema where rating = 1 and \$CONDITIONS" --target-dir /user/oracle/output -m 1
+
+		Checar o HDFS:
+		hdfs dfs -ls /user
+
+		listando o conteudo do arquivo no HDFS
+		hdfs dfs cat /user/oracle/output/part-m-00000
+
