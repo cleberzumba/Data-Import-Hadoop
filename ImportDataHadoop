@@ -1,4 +1,4 @@
--- Mini-Projeto - Carregando 20 bilhoes de registro no Oracle - Criando Esquema:
+-- Mini-Projeto - Carregando 20 Milhoes de registro no Oracle - Criando Esquema:
 
 sqlplus / as sysdba
 create user user1 identified by datahadoop;
@@ -6,7 +6,7 @@ grant connect, resource, unlimited tablespace to user1;
 
 
 
--- Mini-Projeto - Carregando 20 bilhoes de registro no Oracle - Preparando a Carga de Dados:
+-- Mini-Projeto - Carregando 20 Milhoes de registro no Oracle - Preparando a Carga de Dados:
 
 sqlplus user1@orcl
 
@@ -39,7 +39,7 @@ trailing nullcols
 
 
 
--- Mini-Projeto - Carregando 20 bilhoes de registro no Oracle - Executando a Carga de Dados:
+-- Mini-Projeto - Carregando 20 milhoes de registro no Oracle - Executando a Carga de Dados:
 
 sqlldr userid=user1/datahadoop control=loader.dat log=loader.log
 
