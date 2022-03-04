@@ -1,3 +1,53 @@
+-- Mini-Projeto - Carregando 20 bilhoes de registro no Oracle - Criando Esquema:
+
+sqlplus / as sysdba
+create user user1 identified by datahadoop;
+grant connect, resource, unlimited tablespace to user1;
+
+
+
+-- Mini-Projeto - Carregando 20 bilhoes de registro no Oracle - Preparando a Carga de Dados:
+
+sqlplus user1@orcl
+
+CREATE TABLE cinema ( 
+  ID   NUMBER PRIMARY KEY , 
+  USER_ID       VARCHAR2(30), 
+  MOVIE_ID      VARCHAR2(30), 
+  RATING        DECIMAL, 
+  TIMESTAMP     VARCHAR2(256) );
+
+http://files.grouplens.org/datasets/movielens/ml-20m.zip (arquivo que contem os dados)
+unzip ml-20m.zip
+
+mkdir ˜/etl
+cd ˜/etl
+
+vi loader.dat
+
+load data
+INFILE '/home/oracle/Downloads/ml-20m/ratings.csv'
+INTO TABLE cinema
+APPEND
+FIELDS TERMINATED BY ','
+trailing nullcols
+(id SEQUENCE (MAX,1),
+ user_id CHAR(30),
+ movie_id CHAR(30),
+ rating   decimal external,
+ timestamp  char(256))
+
+
+
+-- Mini-Projeto - Carregando 20 bilhoes de registro no Oracle - Executando a Carga de Dados:
+
+sqlldr userid=user1/datahadoop control=loader.dat log=loader.log
+
+sqlplus user1@orcl
+
+select count(*) from cinema;
+
+
 
 -- Mini-Projeto - Transferindo dados do BD Oracle para o HDFS:
 
@@ -61,7 +111,7 @@
 
 		Com usuário Oracle Importação de Dados do Oracle para o HDFS.
 		no diretorio etl:
-		sqoop import --connect jdbc:oracle:thin:aluno/dsahadoop@dataserver.localdomain:1539/orcl --username aluno -password dsahadoop --query "select user_id, movie_id from cinema where rating = 1 and \$CONDITIONS" --target-dir /user/oracle/output -m 1
+		sqoop import --connect jdbc:oracle:thin:user1/datahadoop@dataserver.localdomain:1539/orcl --username user1 -password datahadoop --query "select user_id, movie_id from cinema where rating = 1 and \$CONDITIONS" --target-dir /user/oracle/output -m 1
 
 		Checar o HDFS:
 		hdfs dfs -ls /user
