@@ -1,5 +1,5 @@
 
--- Mini-Projeto - Importando dados do BD Oracle para o HDFS:
+-- Mini-Projeto - Transferindo dados do BD Oracle para o HDFS:
 
 
 	1 - Execução do Mini-Projeto - Inicializando HDFS e YARN
