@@ -1,6 +1,6 @@
 ### operação de ETL completa ###
 #
-# 1 - Criarr um banco de dados Oracle
+# 1 - Criar um banco de dados Oracle
 # 2 - Carregar 20 milhoes de registros  banco de dados Oracle
 # 3 - Utilizar a ferramenta ETL Apache Sqoop para levar os dados do banco Oracle para o HDFS.
 #     estou simulando como se estivesse levando dados de um Data Werehouse para um Data Lake,
